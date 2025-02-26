@@ -1,0 +1,967 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<MComponents>
+
+	<MManager time_to_send_message="3000" time_to_send_request="10000" log_level="0" monitor_port="65104" load_monitor_support="true" configuration_name="UmpNonAuto" write_old_logs="false"/>
+
+-	<MServers>
+
+		<MServer name="ConstCodes" file="components\ConstCodes.dll" class="ADB.ConstCodes">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="ControlIDs" file="components\ControlIDs.dll" class="ADB.ControlIDs">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="DrvMesCodes" file="components\DrvMesCodes.dll" class="ADB.DrvMesCodes">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="Parameters" file="components\parameters.dll" class="ADB.Parameters">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="PointObjects" file="components\PointObjects.dll" class="ADB.PointObjects">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="SUL" file="components\sul.dll" class="ADB.SUL">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="ShovShiftPlans" file="components\ShovShiftPlans.dll" class="ADB.ShovShiftPlans">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="LoadTypesAndWorkTypes" file="components\LoadTypesAndWorkTypes.dll" class="ADB.LoadTypesAndWorkTypes">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="Standards" file="components\Standards.dll" class="ADB.Standards">
+			<Parameters data="external" username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="refuellerParameters" file="components\parameters.dll" class="ADB.Parameters">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice">
+				<Overwrite>
+					<Parameter name="RefuellerVehDetector.Радиус(м)" value="120"/>
+					<Parameter name="RefuellerVehDetector.Разница уровней топлива самосвала(л)" value="50"/>
+					<Parameter name="RefuellerVehDetector.Время синхронизации сообщений(с)" value="600"/>
+				</Overwrite>
+			</Parameters>
+		</MServer>
+
+		<MServer name="RefuellerControlIDs" file="components\RefuellerControlIDs.dll" class="ADB.RefuellerControlIDs">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice">
+			</Parameters>
+		</MServer>
+
+
+
+
+
+		<MServer name="SULLoco" file="components\sulloco.dll" class="ADB.SULLoco">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="LocoShiftTasks" file="components\LocoShiftTasks.dll" class="ADB.LocoShiftTasks">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="IntermediatePoints" file="components\IntermediatePoints.dll" class="ADB.IntermediatePoints">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="LocoAndDumpcars" file="components\LocoAndDumpcars.dll" class="ADB.LocoAndDumpcars">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+
+		<MServer name="DumpcarLoadTypesAndWorkTypes" file="components\DumpcarLoadTypesAndWorkTypes.dll" class="ADB.DumpcarLoadTypesAndWorkTypes">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+		</MServer>
+		
+		<MServer name="AuxControlIDs" file="components\AuxControlIDs.dll" class="ADB.AuxControlIDs">
+			<Parameters username = "dispatcher" password = "disp" provider = "OraOLEDB.Oracle" data_source = "piteservice" />
+		</MServer>
+		
+		<MServer name="NonTechControlIDs" file="components\NonTechControlIDs.dll" class="ADB.NonTechControlIDs">
+			<Parameters username = "dispatcher" password = "disp" provider = "OraOLEDB.Oracle" data_source = "piteservice" />
+		</MServer>
+		
+	</MServers>
+
+	<MProcessors>
+
+	<MProcessor name="ControlIdRecipient" file="components\DBMesDetector.dll" class="ADB.DBMesDetector">
+      <Parameters external_name="ControlIdRecipient"  external_configuration_name="UmpNonAuto"  table="UMPInOut" rows_for_read="1000"
+        start_delay="1000" refresh_delay="1000" 
+        send_delay="10" log_in_messages="true" username = "dispatcher" 
+        password = "disp" provider = "OraOLEDB.Oracle" data_source = "pitEservice"/>
+      <MReceivers>
+        <MReceiver name="ControlIDConverter"/>
+      </MReceivers>
+    </MProcessor>
+
+		<MProcessor name="ControlIDConverter" file="components\ControlIDConverter.dll" class="ADB.ControlIDConverter">
+			<MReceivers>
+
+				
+				<MReceiver name="RefuellerControlIDConverter" mes_type="main_data"/>
+				<MReceiver name="AuxControlIDConverter" mes_type="main_data"/>
+				<MReceiver name="NonTechControlIDConverter" mes_type="main_data"/>
+				
+			</MReceivers>
+			<MServers>
+				<MServer name="ControlIDs" request_type="AllVehIDRequest"/>
+			</MServers>
+		</MProcessor>
+		
+		
+
+		 <!-- ветка вспомогательной техники -->
+    <MProcessor name="NonTechControlIDConverter" file="components\NonTechControlIDConverter.dll" class="ADB.NonTechControlIDConverter">
+      <MServers>
+        <MServer name="NonTechControlIDs" request_type="AllVehIDRequest"/>
+      </MServers>
+      <MReceivers>
+        <MReceiver name="NonTechEventClassifier" mes_type="nontech_data"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="NonTechEventClassifier" file="components\EventClassifier.dll" class="ADB.EventClassifier">
+      <Parameters>
+        <EventTypes>
+          <EventType type="2" mes_type="system_poweroff"/>
+          <EventType type="3" mes_type="system_poweron"/>
+          <EventType type="6" mes_type="system_stop"/>
+          <EventType type="7" mes_type="system_go"/>
+          <EventType type="10" mes_type="system_speedviol"/>
+          <EventType type="12" mes_type="system_brief_state"/>
+          <EventType type="15" mes_type="system_full_state"/>
+		  <EventType type="16" mes_type="system_reset" />
+        </EventTypes>
+      </Parameters>
+      <MReceivers>
+        <MReceiver name="NonTechEventArchiver"/>
+        <MReceiver name="NonTechStopDetector" mes_type="system_stop"/>
+        <MReceiver name="NonTechStopDetector" mes_type="system_go"/>
+        <MReceiver name="NonTechSimpleTransitionDetector" mes_type="system_stop"/>
+        <MReceiver name="NonTechSimpleTransitionDetector" mes_type="system_go"/>
+		<MReceiver name="FirmwareVersionArchiver" mes_type="system_reset" />
+      </MReceivers>
+    </MProcessor>
+	
+	<MProcessor name="FirmwareVersionArchiver" file="components\FirmwareVersionArchiver.dll" class="ADB.FirmwareVersionArchiver">
+			<MReceivers>
+				<MReceiver name="Writer" /> 
+			</MReceivers>
+		</MProcessor>
+    
+    <MProcessor name="NonTechEventArchiver" file="components\NonTechEventArchiver.dll" class="ADB.NonTechEventArchiver">
+      <MReceivers>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor>    
+    
+    <MProcessor name="NonTechStopDetector" file="components\StopDetector.dll" class="ADB.StopDetector" stateful="false">
+      <Parameters id_attribute="nontech_id"/>
+      <MServers>
+        <MServer name="PointObjects" request_type="AllPointObjectsRequest"/>
+      </MServers>
+      <MReceivers>
+        <MReceiver name="NonTechStopWriter" mes_type="stop_info"/>
+        <MReceiver name="NonTechEventWatcher" mes_type="stop_begin"/>
+        <MReceiver name="NonTechEventWatcher" mes_type="stop_info"/>
+      </MReceivers>
+    </MProcessor>
+
+    
+    <MProcessor name="NonTechStopWriter" file="components\NonTechStopWriter.dll" class="ADB.NonTechStopWriter">
+      <MReceivers>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor>
+    
+	<MProcessor name="IdleWriter" file="components\IdleWriter.dll" class="ADB.IdleWriter">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+		
+    <MProcessor name="NonTechSimpleTransitionDetector" file="components\SimpleTransitionDetector.dll" class="ADB.SimpleTransitionDetector">
+      <Parameters id_attribute="nontech_id"/>
+      <MReceivers>
+        <MReceiver name="NonTechSimpleTransitionWriter"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="NonTechSimpleTransitionWriter" file="components\NonTechSimpleTransitionWriter.dll" class="ADB.NonTechSimpleTransitionWriter">
+      <MReceivers>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="NonTechEventWatcher" file="components\NonTechEventWatcher.dll" class="ADB.NonTechEventWatcher">
+      <MReceivers>
+        <MReceiver name="NonTechEventArchiverAndPublisher"/>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="NonTechEventArchiverAndPublisher" file="components\EventArchiverAndPublisher.dll" class="ADB.EventArchiverAndPublisher">
+      <Parameters id_attribute="nontech_id"/>
+      <MReceivers>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor>    
+		
+		
+		<!-- ветка вспомогательной техники -->
+    <MProcessor name="AuxControlIDConverter" file="components\AuxControlIDConverter.dll" class="ADB.AuxControlIDConverter">
+      <MServers>
+        <MServer name="AuxControlIDs" request_type="AllVehIDRequest"/>
+      </MServers>
+      <MReceivers>
+        <MReceiver name="AuxEventClassifier" mes_type="aux_data"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="AuxEventClassifier" file="components\EventClassifier.dll" class="ADB.EventClassifier">
+      <Parameters>
+        <EventTypes>
+          <EventType type="2" mes_type="system_poweroff"/>
+          <EventType type="3" mes_type="system_poweron"/>
+          <EventType type="6" mes_type="system_stop"/>
+          <EventType type="7" mes_type="system_go"/>
+          <EventType type="10" mes_type="system_speedviol"/>
+          <EventType type="12" mes_type="system_brief_state"/>
+          <EventType type="15" mes_type="system_full_state"/>
+		  <EventType type="16" mes_type="system_reset" /> 
+		  
+		  <EventType type="91" mes_type="analog_signal_data"/>
+		  <EventType type="100" mes_type="drv_message"/>
+		  
+        </EventTypes>
+      </Parameters>
+      <MReceivers>
+        <MReceiver name="AuxEventArchiver"/>
+       
+        <MReceiver name="AuxStopDetector" mes_type="system_stop"/>
+        <MReceiver name="AuxStopDetector" mes_type="system_go"/>
+        <MReceiver name="AuxSimpleTransitionDetector" mes_type="system_stop"/>
+        <MReceiver name="AuxSimpleTransitionDetector" mes_type="system_go"/>
+		<MReceiver name="FirmwareVersionArchiver" mes_type="system_reset" />
+		<MReceiver name="AnalogVersionExtractor" mes_type="analog_signal_data"/>
+		
+		 <MReceiver name="AuxStoppagesMesPublisher" mes_type="system_stop" />
+		<MReceiver name="AuxStoppagesMesPublisher" mes_type="system_go" />
+		<MReceiver name="AuxStoppagesMesPublisher" mes_type="system_brief_state" />
+		<MReceiver name="IdleWriter" mes_type="drv_message"/>
+
+	  </MReceivers>
+    </MProcessor>
+	
+	
+	
+	
+	<MProcessor name="AnalogVersionExtractor" file="components\AttributeAssigner.dll" class="ADB.AttributeAssigner">
+        <Parameters>
+            <Assigments>
+                <Assigment attribute="version_adv" xpath_expression="concat(@version,'_',@type_version)"/>
+            </Assigments>
+        </Parameters>
+        <MReceivers>
+        <MReceiver name="AnalogSignalExtractor"/>
+        </MReceivers>
+    </MProcessor>
+	
+	
+	<MProcessor name="AnalogSignalExtractor" file="components\UniversalDataExtractor.dll" class="ADB.UniversalDataExtractor">
+      <Parameters>
+       <MessageInfo mes_type_attribute="version_adv" mes_type_attribute_value="203_0" raw_data_attribute="data" raw_data_byte_length="30" overwrite_attribute="mes_type:shov_analog_data">
+       <AttributeInfo name="sensorid_0" begin_bit="112" end_bit="127" type="UInt" />
+        <AttributeInfo name="sensorid_1" begin_bit="128" end_bit="143" type="UInt" />
+        <AttributeInfo name="sensorid_2" begin_bit="144" end_bit="159" type="UInt" />
+		
+        <AttributeInfo name="sensorid_0_valavg" begin_bit="160" end_bit="175" type="UInt" />
+        <AttributeInfo name="sensorid_0_valmax" begin_bit="176" end_bit="191" type="UInt" />
+        <AttributeInfo name="sensorid_0_valmin" begin_bit="192" end_bit="207" type="UInt" />
+		
+		<AttributeInfo name="sensorid_1_valavg" begin_bit="208" end_bit="223" type="UInt" />
+        <AttributeInfo name="sensorid_1_valmax" begin_bit="224" end_bit="239" type="UInt" />
+        <AttributeInfo name="sensorid_1_valmin" begin_bit="240" end_bit="255" type="UInt" />
+		
+		<AttributeInfo name="sensorid_2_valavg" begin_bit="256" end_bit="271" type="UInt" />
+        <AttributeInfo name="sensorid_2_valmax" begin_bit="272" end_bit="287" type="UInt" />
+        <AttributeInfo name="sensorid_2_valmin" begin_bit="288" end_bit="303" type="UInt" />
+        
+		
+      </MessageInfo>
+	  
+	 </Parameters>
+      <MReceivers>
+        
+        <MReceiver name="GasHazardArchiver_aux" mes_type="shov_analog_data"/> 
+      </MReceivers>
+    </MProcessor>
+	
+	<MProcessor name="GasHazardArchiver_aux" file="components\Vist.DBWriter.dll" class="Vist.UMP.Classes.DBWriter" ver="2.0" >
+			<Parameters user="dispatcher" password="disp" data_source="piteservice" separator="." conection_mode="keep" >
+				<Mapping name="m1" xpath="Message[@veh_id and @gmt_time]" >
+					<Template>
+INSERT INTO DISPATCHER.GAS_HAZARD (
+   ID, X, Y, 
+   Z, TIME, GMT_TIME, 
+   SYSTEMTIME, GAS_LEVEL, GAS_LEVEL_RAW, 
+   VEHID, VEHTYPE) 
+VALUES ( gazhazardseq.NextVal,
+ :x,
+ :y,
+ :h,
+ :param_time,
+ :param_gmt_time,
+ sysdate,
+ decode(sign(:raw_dst),0,0,ROUND((0.0111 * :raw_dst - 37.484),1)),
+ :raw_dst,
+ :paramvehid,
+ 'Бульдозер')				  
+ 					</Template>				
+					<FieldMappings field="veh_id" 	type="string" 	param=":paramvehid"		/>
+					<FieldMappings field="gmt_time" type="date" 	param=":param_gmt_time"	/>
+					<FieldMappings field="time" type="date" 	param=":param_time"	/>
+					<FieldMappings field="x" 		type="double" 	param=":x"	value="0"			/>
+					<FieldMappings field="y" 		type="double" 	param=":y"	value="0"			/>
+					<FieldMappings field="h" 		type="double" 	param=":h"	value="0"			/>
+					<FieldMappings field="sensorid_2_valavg" 	type="double" 	param=":raw_dst" value="0"		/>
+				</Mapping>
+			</Parameters>		
+			
+			<MReceivers>
+			</MReceivers>
+		</MProcessor>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<MProcessor name="GasHazardArchiver" file="components\Vist.DBWriter.dll" class="Vist.UMP.Classes.DBWriter" ver="2.0" >
+			<Parameters user="dispatcher" password="disp" data_source="piteservice" separator="." conection_mode="keep" >
+				<Mapping name="m1" xpath="Message[@veh_id and @gmt_time]" >
+					<Template>
+INSERT INTO DISPATCHER.GAS_HAZARD (
+   ID, X, Y, 
+   Z, TIME, GMT_TIME, 
+   SYSTEMTIME, GAS_LEVEL, GAS_LEVEL_RAW, 
+   VEHID, VEHTYPE) 
+VALUES ( gazhazardseq.NextVal,
+ :x,
+ :y,
+ :h,
+ :param_time,
+ :param_gmt_time,
+ sysdate,
+ decode(sign(:raw_dst),0,0,ROUND((0.0111 * :raw_dst - 37.484),1)),
+ :raw_dst,
+ :paramvehid,
+ 'Бульдозер')				  
+ 					</Template>				
+					<FieldMappings field="veh_id" 	type="string" 	param=":paramvehid"		/>
+					<FieldMappings field="gmt_time" type="date" 	param=":param_gmt_time"	/>
+					<FieldMappings field="time" type="date" 	param=":param_time"	/>
+					<FieldMappings field="x" 		type="double" 	param=":x"	value="0"			/>
+					<FieldMappings field="y" 		type="double" 	param=":y"	value="0"			/>
+					<FieldMappings field="h" 		type="double" 	param=":h"	value="0"			/>
+					<FieldMappings field="raw_dst" 	type="double" 	param=":raw_dst" value="0"		/>
+				</Mapping>
+			</Parameters>		
+			
+			<MReceivers>
+			</MReceivers>
+		</MProcessor>
+		
+	
+	<!--MReceiver name="AuxStoppagesMesPublisher" mes_type="system_stop" />
+		<MReceiver name="AuxStoppagesMesPublisher" mes_type="system_go" />
+		<MReceiver name="AuxStoppagesMesPublisher" mes_type="system_brief_state" /-->
+    
+ <!--<MProcessor name="AuxStoppagesMesPublisher" file="components\DBMesPublisher.dll" class="ADB.DBMesPublisher">
+		<Parameters table="UMPInOut" external_configuration="IdleStoppages_Aux" external_recipient="IdleStoppagesAuxRecipient"/>
+		<MReceivers>
+			<MReceiver name="Writer"/>
+		</MReceivers>
+	</MProcessor>
+-->
+<MProcessor name="AuxStoppagesMesPublisher" file="components\DBMesPublisher.dll" class="ADB.DBMesPublisher">
+        <Parameters table="UMPInOut" external_configuration="IdleStoppages_Aux" external_recipient="IdleStoppagesAuxRecipient"/>
+        <MReceivers>
+            <MReceiver name="Writer"/>
+        </MReceivers>
+    </MProcessor>
+
+	<MProcessor name="FirmwareVersionArchiver" file="components\FirmwareVersionArchiver.dll" class="ADB.FirmwareVersionArchiver">
+			<MReceivers>
+				<MReceiver name="Writer" /> 
+			</MReceivers>
+		</MProcessor>
+    
+    <MProcessor name="AuxEventArchiver" file="components\AuxEventArchiver.dll" class="ADB.AuxEventArchiver">
+      <MReceivers>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor>    
+    
+    <MProcessor name="AuxStopDetector" file="components\StopDetector.dll" class="ADB.StopDetector" stateful ="false">
+      <Parameters id_attribute="aux_id"/>
+      <MServers>
+        <MServer name="PointObjects" request_type="AllPointObjectsRequest"/>
+      </MServers>
+      <MReceivers>
+        <MReceiver name="AuxStopWriter" mes_type="stop_info"/>
+        <MReceiver name="AuxEventWatcher" mes_type="stop_begin"/>
+        <MReceiver name="AuxEventWatcher" mes_type="stop_info"/>
+		
+		<MReceiver name="AuxToVehID" mes_type="stop_info"/>
+      </MReceivers>
+    </MProcessor>
+	
+	<MProcessor name="AuxToVehID" file="components\AuxToVehID.dll" class="ADB.AuxToVehID">
+      <MReceivers>
+        <MReceiver name="RefuellerVehDetector"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="AuxStopWriter" file="components\AuxStopWriter.dll" class="ADB.AuxStopWriter">
+      <MReceivers>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="AuxSimpleTransitionDetector" file="components\SimpleTransitionDetector.dll" class="ADB.SimpleTransitionDetector" stateful="false">
+      <Parameters id_attribute="aux_id"/>
+      <MReceivers>
+        <MReceiver name="AuxSimpleTransitionWriter"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="AuxSimpleTransitionWriter" file="components\AuxSimpleTransitionWriter.dll" class="ADB.AuxSimpleTransitionWriter">
+      <MReceivers>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="AuxEventWatcher" file="components\AuxEventWatcher.dll" class="ADB.AuxEventWatcher">
+      <MReceivers>
+        <MReceiver name="AuxEventArchiverAndPublisher"/>
+      </MReceivers>
+    </MProcessor>
+    
+    <MProcessor name="AuxEventArchiverAndPublisher" file="components\EventArchiverAndPublisher.dll" class="ADB.EventArchiverAndPublisher">
+      <Parameters id_attribute="aux_id"/>
+      <MReceivers>
+        <MReceiver name="Writer"/>
+      </MReceivers>
+    </MProcessor> 
+			<!-- Ветка локомотивов -->
+
+		<MProcessor name="LocoFuelComputer" file="components\LocoFuelComputer.dll" class="ADB.LocoFuelComputer">
+			<MServers>
+				<MServer name="Parameters"/>
+			</MServers>
+			<MReceivers>
+				<MReceiver name="DumpcarDetector" mes_type="loco_data"/>
+				<MReceiver name="LocoSKZLenComputer" mes_type="loco_data"/>
+				<MReceiver name="LocoStateArchiverAndPublisher" mes_type="loco_data"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="LocoStateArchiverAndPublisher" file="components\LocoStateArchiverAndPublisher.dll" class="ADB.LocoStateArchiverAndPublisher">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="DumpcarDetector" file="components\DumpcarDetector.dll" class="ADB.DumpcarDetector">
+			<MServers>
+				<MServer name="LocoAndDumpcars" request_type="TrainDumpcarsRequest"/>
+			</MServers>
+			<MReceivers>
+				<MReceiver name="LocoEventArchiverAndPublisher" mes_type="loco_data"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="LocoEventArchiverAndPublisher" file="components\LocoEventArchiverAndPublisher.dll" class="ADB.LocoEventArchiverAndPublisher">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="LocoSKZLenComputer" file="components\LocoSKZLenComputer.dll" class="ADB.LocoSKZLenComputer" stateful="false">
+			<MReceivers>
+				<MReceiver name="LocoStopDetector"/>
+				<MReceiver name="LocoPseudoStopDetector"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="LocoStopDetector" file="components\LocoStopDetector.dll" class="ADB.LocoStopDetector" stateful="false">
+			<MReceivers>
+				<MReceiver name="LocoPseudoStopDetector" mes_type="stop_begin"/>
+				<MReceiver name="LocoPseudoStopDetector" mes_type="stop_info"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="Parameters" request_type="MinStopTime"/>
+				<MServer name="Parameters" request_type="MinBetweenStopTime"/>
+				<MServer name="PointObjects" request_type="AllPointObjectsRequest"/>
+			</MServers>
+		</MProcessor>
+
+		<MProcessor name="LocoPseudoStopDetector" file="components\LocoPseudoStopDetector.dll" class="ADB.LocoPseudoStopDetector" stateful="false">
+			<MReceivers>
+				<MReceiver name="LocoStopTester" mes_type="stop_begin"/>
+				<MReceiver name="LocoStopTester" mes_type="stop_info"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="Parameters" request_type="ParametersRequest"/>
+				<MServer name="IntermediatePoints" request_type="AllPointsRequest"/>
+			</MServers>
+		</MProcessor>
+
+		<MProcessor name="LocoStopTester" file="components\LocoStopTester.dll" class="ADB.LocoStopTester" stateful="false">
+			<MReceivers>
+				<MReceiver name="LocoTripDetector" mes_type="stop_begin"/>
+				<MReceiver name="LocoTripDetector" mes_type="stop_info"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="Parameters" request_type="Parameters"/>
+				<MServer name="SULLoco" request_type="SULRequest"/>
+				<MServer name="LocoShiftTasks" request_type="TestPoint"/>
+			</MServers>
+		</MProcessor>
+
+		<MProcessor name="LocoTripDetector" file="components\LocoTripDetector.dll" class="ADB.LocoTripDetector" stateful="false">
+			<MReceivers>
+				<MReceiver name="LocoTransitionDetector" mes_type="loco_load_info"/>
+				<MReceiver name="LocoTransitionDetector" mes_type="loco_unload_info"/>
+				<MReceiver name="LocoTransitionDetector" mes_type="stop_info"/>
+				<MReceiver name="DumpcarTripDetector" mes_type="loco_load_info"/>
+				<MReceiver name="DumpcarTripDetector" mes_type="loco_unload_info"/>
+				<MReceiver name="DumpcarTripDetector" mes_type="loco_trip_begin"/>
+				<MReceiver name="DumpcarTripDetector" mes_type="loco_trip_end"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="Parameters" request_type="ParametersRequest"/>
+			</MServers>
+		</MProcessor>
+
+		<MProcessor name="LocoTransitionDetector" file="components\LocoTransitionDetector.dll" class="ADB.LocoTransitionDetector" stateful="false">
+			<MReceivers>
+				<MReceiver name="LocoTransitionWriter"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="Parameters" request_type="ParametersRequest"/>
+				<MServer name="IntermediatePoints" request_type="AllPointsRequest"/>
+			</MServers>
+		</MProcessor>
+
+		<MProcessor name="LocoTransitionWriter" file="components\LocoTransitionWriter.dll" class="ADB.LocoTransitionWriter" stateful="false">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="DumpcarTripDetector" file="components\DumpcarTripDetector.dll" class="ADB.DumpcarTripDetector" stateful="false">
+			<MReceivers>
+				<MReceiver name="SULDumpcarTripDetector" mes_type="dumpcar_trip_info"/>
+				<MReceiver name="DumpcarTripWriter" mes_type="dumpcar_trip_begin"/>
+				<MReceiver name="DumpcarTripWriter" mes_type="dumpcar_trip_end"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="LocoAndDumpcars" request_type="TrainDumpcarsRequest"/>
+			</MServers>
+		</MProcessor>
+
+		<MProcessor name="SULDumpcarTripDetector" file="components\SULDumpcarTripDetector.dll" class="ADB.SULDumpcarTripDetector" stateful="false">
+			<MReceivers>
+				<MReceiver name="DumpcarWorkTypeDetector" mes_type="dumpcar_trip_info"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="Parameters" request_type="SULParamRequest"/>
+				<MServer name="SULLoco" request_type="SULRequest"/>
+			</MServers>
+		</MProcessor>
+
+		<MProcessor name="DumpcarWorkTypeDetector" file="components\DumpcarWorkTypeDetector.dll" class="ADB.DumpcarWorkTypeDetector">
+			<MServers>
+				<MServer name="Parameters" request_type="WTParamRequest"/>
+				<MServer name="DumpcarLoadTypesAndWorkTypes" request_type="LTWTRequest"/>
+			</MServers>
+			<MReceivers>
+				<MReceiver name="DumpcarTripWriter"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="DumpcarTripWriter" file="components\DumpcarTripWriter.dll" class="ADB.DumpcarTripWriter">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<!-- Ветка топливозаправщиков -->
+
+		<MProcessor name="RefuellerControlIDConverter" file="components\RefuellerControlIDConverter.dll" class="ADB.RefuellerControlIDConverter">
+			<MReceivers>
+				<MReceiver name="RefuellerEventClassifier" mes_type="refueller_data"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="RefuellerControlIDs" request_type="AllRefuellerIDRequest"/>
+			</MServers>
+		</MProcessor>
+		
+		<MProcessor name="RefuellerEventClassifier" file="components\EventClassifier.dll" class="ADB.EventClassifier">
+			<Parameters>
+				<EventTypes>
+					<EventType type="2" mes_type="system_poweroff"/>
+					<EventType type="3" mes_type="system_poweron"/>
+					<EventType type="5" mes_type="system_sysmsg"/>
+					<EventType type="6" mes_type="system_stop"/>
+					<EventType type="7" mes_type="system_go"/>
+					<EventType type="10" mes_type="system_speedviol"/>
+					<EventType type="11" mes_type="system_shift_begin"/>
+					<EventType type="14" mes_type="system_shift_end"/>
+					<EventType type="12" mes_type="system_brief_state"/>
+					<EventType type="15" mes_type="system_full_state"/>
+					<EventType type="16" mes_type="system_reset" />
+					<EventType type="21" mes_type="refueller_refuel_begin"/>
+					<EventType type="22" mes_type="refueller_refuel_end"/>
+					<EventType type="23" mes_type="refueller_manual_refuel_begin"/>
+					<EventType type="279" mes_type="refueller_manual_refuel_begin"/>
+					<EventType type="24" mes_type="refueller_manual_refuel_end"/>														
+					<EventType type="52" mes_type="refueller_tank_volume"/>
+				</EventTypes>
+			</Parameters>
+			<MReceivers>
+				<MReceiver name="RefuellerMesArchiveWriter"/>
+				<MReceiver name="RefuellerEventWatcher" mes_type="system_poweroff"/>
+				<MReceiver name="RefuellerEventWatcher" mes_type="system_poweron"/>
+				<MReceiver name="BriefRefStateDetector" mes_type="system_brief_state"/>
+				<MReceiver name="RefuellerStopDetector" mes_type="system_stop"/>
+				<MReceiver name="RefuellerStopDetector" mes_type="system_go"/>
+				<MReceiver name="RefuellerSimpleTransitionDetector" mes_type="system_stop"/>
+				<MReceiver name="RefuellerSimpleTransitionDetector" mes_type="system_go"/>
+				<MReceiver name="RefuellerSpeedViolDetector" mes_type="system_speedviol"/>
+				<MReceiver name="RefuellerRefuelDetector" mes_type="refueller_refuel_begin"/>
+				<MReceiver name="RefuellerRefuelDetector" mes_type="refueller_refuel_end"/>
+				<MReceiver name="RefuellerRefuelDetector2" mes_type="refueller_manual_refuel_begin"/>
+				<MReceiver name="RefuellerRefuelDetector2" mes_type="refueller_manual_refuel_end"/>
+				<MReceiver name="FirmwareVersionArchiver" mes_type="system_reset" />							
+				<MReceiver name="RefuellerTankVolumeExtractor" mes_type="refueller_tank_volume"/>
+			</MReceivers>
+		</MProcessor>
+		
+		<MProcessor name="FirmwareVersionArchiver" file="components\FirmwareVersionArchiver.dll" class="ADB.FirmwareVersionArchiver">
+			<MReceivers>
+				<MReceiver name="Writer" /> 
+			</MReceivers>
+		</MProcessor>
+		
+		<MProcessor name="RefuellerMesArchiveWriter" file="components\RefuellerMesArchiveWriter.dll" class="ADB.RefuellerMesArchiveWriter">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+		
+		<MProcessor name="BriefRefStateDetector" file="components\BriefVehStateDetector.dll" class="ADB.BriefVehStateDetector">
+			<MReceivers>
+				<MReceiver name="RefuellerEventWatcher" mes_type="brief_state"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerStopDetector" file="components\StopDetector.dll" class="ADB.StopDetector" stateful="false">
+			<Parameters id_attribute="refueller_id"/>
+			<MServers>
+				<MServer name="PointObjects" request_type="AllPointObjectsRequest"/>
+			</MServers>
+			<MReceivers>
+				<MReceiver name="RefuellerStopWriter" mes_type="stop_info"/>
+				<MReceiver name="RefuellerEventWatcher" mes_type="stop_begin"/>
+				<MReceiver name="RefuellerEventWatcher" mes_type="stop_info"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerStopWriter" file="components\RefuellerStopWriter.dll" class="ADB.RefuellerStopWriter">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerSimpleTransitionDetector" file="components\SimpleTransitionDetector.dll" class="ADB.SimpleTransitionDetector">
+			<Parameters id_attribute="refueller_id"/>
+			<MReceivers>
+				<MReceiver name="RefuellerSimpleTransitionWriter"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerSimpleTransitionWriter" file="components\RefuellerSimpleTransitionWriter.dll" class="ADB.RefuellerSimpleTransitionWriter">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerSpeedViolDetector" file="components\SpeedViolDetector.dll" class="ADB.SpeedViolDetector">
+			<Parameters id_attribute="refueller_id"/>
+			<MReceivers>
+				<MReceiver name="RefuellerSpeedViolPublisher" mes_type="speed_violation"/>
+				<MReceiver name="RefuellerEventWatcher" mes_type="speed_violation"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerSpeedViolPublisher" file="components\RefuellerSpeedViolPublisher.dll" class="ADB.RefuellerSpeedViolPublisher">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerEventWatcher" file="components\RefuellerEventWatcher.dll" class="ADB.RefuellerEventWatcher">
+			<MReceivers>
+				<MReceiver name="RefuellerEventArchiverAndPublisher"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerEventArchiverAndPublisher" file="components\EventArchiverAndPublisher.dll" class="ADB.EventArchiverAndPublisher">
+			<Parameters id_attribute="refueller_id"/>
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerRefuelDetector" file="components\RefuellerRefuelDetector.dll" class="ADB.RefuellerRefuelDetector">
+			<MReceivers>
+				<MReceiver name="RefuellerWriter" mes_type="refueller_refuel_full"/>
+				<MReceiver name="RefuellerVehDetector" mes_type="refueller_refuel_full"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerRefuelDetector2" file="components\UniversalDataExtractor.dll" class="ADB.UniversalDataExtractor">
+      <Parameters>
+        <!--MessageInfo mes_type_attribute="mes_type" mes_type_attribute_value="refueller_refuel_begin" raw_data_attribute="data" raw_data_byte_length="14" overwrite_attribute="mes_type:refueller_refuel_begin">
+          <AttributeInfo name="mode" begin_bit="0" end_bit="7" type="UInt"/>
+          <AttributeInfo name="number_flowmeter" begin_bit="8" end_bit="15" type="UInt"/>
+	    </MessageInfo>
+		<MessageInfo mes_type_attribute="mes_type" mes_type_attribute_value="refueller_refuel_end" raw_data_attribute="data" raw_data_byte_length="14" overwrite_attribute="mes_type:refueller_refuel_begin">
+          <AttributeInfo name="filled" begin_bit="0" end_bit="15" type="UInt"/>
+          <AttributeInfo name="density_fuel" begin_bit="16" end_bit="31" type="UInt"/>
+		  <AttributeInfo name="temp_fuel" begin_bit="32" end_bit="39" type="Int"/>
+		  <AttributeInfo name="number_flowmeter" begin_bit="40" end_bit="47" type="UInt"/>
+		  <AttributeInfo name="total_filled" begin_bit="48" end_bit="79" type="Int64"/>
+	    </MessageInfo-->
+		 <MessageInfo mes_type_attribute="mes_type" mes_type_attribute_value="refueller_manual_refuel_begin" raw_data_attribute="data" raw_data_byte_length="24" overwrite_attribute="mes_type:refueller_manual_refuel_begin">
+          <AttributeInfo name="mode" begin_bit="0" end_bit="7" type="UInt"/>
+          <AttributeInfo name="tank" begin_bit="8" end_bit="15" type="UInt"/>		  
+          <AttributeInfo name="truck_number" begin_bit="16" end_bit="31" type="UInt"/>
+          <AttributeInfo name="truck_type" begin_bit="32" end_bit="47" type="UInt"/>		  
+		  <AttributeInfo name="reserved" begin_bit="48" end_bit="55" type="Int"/>
+          <AttributeInfo name="number_flowmeter" begin_bit="56" end_bit="63" type="UInt"/>		  
+          <AttributeInfo name="truck_name" begin_bit="64" end_bit="0" type="WIN1251"/>
+	    </MessageInfo>
+		<MessageInfo mes_type_attribute="mes_type" mes_type_attribute_value="refueller_manual_refuel_end" raw_data_attribute="data" raw_data_byte_length="14" overwrite_attribute="mes_type:refueller_manual_refuel_end">
+          <AttributeInfo name="filled" begin_bit="0" end_bit="15" type="UInt"/>
+          <AttributeInfo name="density_fuel" begin_bit="16" end_bit="31" type="UInt"/>
+		  <AttributeInfo name="temp_fuel" begin_bit="32" end_bit="39" type="Int"/>
+		  <AttributeInfo name="number_flowmeter" begin_bit="40" end_bit="47" type="UInt"/>
+	    </MessageInfo>
+      </Parameters>
+      <MReceivers>
+		<MReceiver name="FileWriter"/> 
+		<MReceiver name="RefuellerManualRefuelBeginAssigner" mes_type="refueller_manual_refuel_begin"/>
+		<MReceiver name="RefuellerManualRefuelEndWriter" mes_type="refueller_manual_refuel_end"/>	
+      </MReceivers>
+		</MProcessor>		
+		
+		
+	 <MProcessor name="RefuellerManualRefuelBeginAssigner" file="components\AttributeAssigner.dll" class="ADB.AttributeAssigner">
+      <Parameters>
+        <Assigments>	
+	<Assigment attribute="truck_type" xpath_expression="substring-before(@truck_name,';')"/>
+           <Assigment attribute="truck_name" xpath_expression="substring-after(@truck_name,';')"/>
+     </Assigments>
+      </Parameters>
+      <MReceivers>
+	  	<MReceiver name="FileWriter"/> 
+	<MReceiver name="RefuellerManualRefuelBeginWriter"/>
+	</MReceivers>
+    </MProcessor>
+		
+		<MProcessor name="RefuellerManualRefuelBeginWriter" file="components\Vist.DBWriter.dll" class="Vist.UMP.Classes.DBWriter" ver="2.0" >
+			<Parameters user="dispatcher" password="disp" data_source="piteservice" separator="." conection_mode="keep" >
+				<Mapping name="m1" xpath="Message[@mes_type='refueller_manual_refuel_begin']" >
+					<Template>
+      INSERT INTO refuellermanualrefuel (refuellerid,timebegin,gmttimebegin,vehid,x,y,"MODE",tank,truck_type,number_flowmeter)
+				   values
+         (       :refuellerid,:time,:gmt_time,:truck_name,:x,:y,:mode_,:tank,:truck_type,:number_flowmeter
+		 )
+ 					</Template>				
+					<FieldMappings field="refueller_id" 	type="string" 	param=":refuellerid"		/>
+					<FieldMappings field="time" type="date" 	param=":time"	/>
+					<FieldMappings field="gmt_time" type="date" 	param=":gmt_time"	/>
+					<FieldMappings field="truck_name" 	type="string" 	param=":truck_name"	/>
+					<FieldMappings field="x" 		type="double" 	param=":x"	value="0"			/>
+					<FieldMappings field="y" 		type="double" 	param=":y"	value="0"			/>
+					<FieldMappings field="mode" 	type="integer" 	param=":mode_"	value="0"		/>
+					<FieldMappings field="tank" 	type="integer" 	param=":tank"	value="0"		/>
+					<FieldMappings field="truck_type" 	type="string" 	param=":truck_type"	value="0"		/>
+					<FieldMappings field="number_flowmeter" 	type="integer" 	param=":number_flowmeter"	value="0"		/>
+				</Mapping>
+				
+			</Parameters>		
+			
+			<MReceivers>
+			</MReceivers>
+		</MProcessor>
+		
+		
+		<MProcessor name="RefuellerManualRefuelEndWriter" file="components\Vist.DBWriter.dll" class="Vist.UMP.Classes.DBWriter" ver="2.0" >
+			<Parameters user="dispatcher" password="disp" data_source="piteservice" separator="." conection_mode="keep" >
+		<Mapping name="m1" xpath="Message[@mes_type='refueller_manual_refuel_end']" >
+					<Template>
+      update refuellermanualrefuel set timeend=:time,gmttimeend=:gmt_time,fuel=:filled,density=:density_fuel,temperature=:temp_fuel where (number_flowmeter=:number_flowmeter) and refuellerid=:refuellerid and gmttimebegin=(select  max(gmttimebegin) from refuellermanualrefuel  where refuellerid=:refuellerid and gmttimeend is null and :gmt_time>=gmttimebegin and  (number_flowmeter=:number_flowmeter))
+	 	  	</Template>		
+					<FieldMappings field="refueller_id" 	type="string" 	param=":refuellerid"		/>
+					<FieldMappings field="time" type="date" 	param=":time"	/>
+					<FieldMappings field="gmt_time" type="date" 	param=":gmt_time"	/>
+					<FieldMappings field="filled" 		type="double" 	param=":filled"	value="0"			/>
+					<FieldMappings field="density_fuel" 		type="double" 	param=":density_fuel"	value="0"			/>
+					<FieldMappings field="temp_fuel" 	type="double" 	param=":temp_fuel"	value="0"		/>					
+					<FieldMappings field="number_flowmeter" 	type="integer" 	param=":number_flowmeter"	value="0"		/>
+				</Mapping>
+			</Parameters>		
+			
+			<MReceivers>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="RefuellerManualRefuelDetector" file="components\RefuellerManualRefuelDetector.dll" class="ADB.RefuellerManualRefuelDetector">
+			<MReceivers>
+				<MReceiver name="RefuellerWriter" mes_type="refueller_manual_refuel_full"/>
+			</MReceivers>
+		</MProcessor>
+		
+		
+		<MProcessor name="RefuellerVehDetectorRecipient" file="components\DBMesDetector.dll" class="ADB.DBMesDetector">
+			<Parameters external_name="RefuellerVehDetectorRecipient"  external_configuration_name="UmpNonAuto" table="UMPInOut" rows_for_read="24"
+			start_delay="1000" refresh_delay="300" 
+			send_delay="50" log_in_messages="true" username = "dispatcher" 
+			password = "disp" provider = "OraOLEDB.Oracle" data_source = "pitEservice"/>
+		<MReceivers>
+			<MReceiver name="RefuellerVehDetector"/>
+		</MReceivers>
+		</MProcessor>
+		
+		
+		
+		<MProcessor name="RefuellerVehDetector" file="components\RefuellerVehDetector.dll" class="ADB.RefuellerVehDetector">
+			<MReceivers>
+				<MReceiver name="RefuellerWriter" mes_type="refueller_veh_refuel_full"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="refuellerParameters"/>
+			</MServers>
+		</MProcessor>
+
+				<MProcessor name="RefuellerTankVolumeExtractor" file="components\RefuellerTankVolumeExtractor.dll" class="ADB.RefuellerTankVolumeExtractor">
+			<MReceivers>
+				<MReceiver name="RefuellerTankVolumeWriter"/>
+			</MReceivers>
+		</MProcessor>
+		
+		<MProcessor name="RefuellerTankVolumeWriter" file="components\RefuellerTankVolumeWriter.dll" class="ADB.RefuellerTankVolumeWriter">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+		
+		
+
+		<MProcessor name="RefuellerWriter" file="components\RefuellerWriter.dll" class="ADB.RefuellerWriter">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+
+		<MProcessor name="Writer" file="components\DBWriterBuffered.dll" class="ADB.DBWriterBuffered">
+			<Parameters username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice" max_file_age="5" max_buf_size="14096" on_error="check_connection"/>
+		</MProcessor>
+		
+		<!--MProcessor name="Writer" file="components\PipeWriter.dll" class="ADB.PipeWriter">
+	      <Parameters pipe_name="NonAuto/PipeWriter" server_name="." connect_retry_interval="1000" 
+	                  out_buffer_size="51200" in_buffer_size="51200" max_read_bytes="51200" />
+		     <MReceivers>
+		     </MReceivers>
+	    </MProcessor-->
+
+		
+				
+			<!-- Отправка сообщений бульдозерам -->
+			
+		<MProcessor name="DispMesDetector" file="components\DispMesDetector.dll" class="ADB.DispMesDetector">
+			<Parameters refresh_delay="2" username="dispatcher" password="disp" provider="OraOLEDB.Oracle" data_source="piteservice"/>
+			<MReceivers>
+				<MReceiver name="DispMesMsgPacker"/>
+				<MReceiver name="DispMesArchiver"/>
+			</MReceivers>
+		</MProcessor>
+		
+		<MProcessor name="DispMesMsgPacker" file="components\DispMesMsgPacker_New.dll" class="ADB.DispMesMsgPacker">
+			<MReceivers>
+				<MReceiver name="VehIDConverter"/>
+			</MReceivers>
+		</MProcessor>
+		
+		<MProcessor name="DispMesArchiver" file="components\DispMesArchiver.dll" class="ADB.DispMesArchiver">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+		
+		
+		<MProcessor name="VehIDConverter" file="components\VehIDConverter.dll" class="ADB.VehIDConverter">
+		<Parameters default_vehtype="Бульдозер"/>
+			<MReceivers>
+				<MReceiver name="OutgoingMessageManagerRNB"/>
+				<MReceiver name="OutgoingMessageManager"/>
+			</MReceivers>
+			<MServers>
+				<MServer name="ControlIDs" request_type="AllVehIDRequest"/>
+			</MServers>
+		</MProcessor>
+		
+		<MProcessor name="OutgoingMessageManager" file="components\OutgoingMessageManager.dll" class="ADB.OutgoingMessageManager">
+			<MReceivers>
+				<MReceiver name="OutgoingMessagePublisher" mes_type="outgoing_msg"/>
+				<MReceiver name="DeliveryOutMsgWriter" mes_type="delivery_out_msg"/>
+			</MReceivers>
+		</MProcessor>
+		
+		<MProcessor name="OutgoingMessagePublisher" file="components\DBMesPublisher.dll" class="ADB.DBMesPublisher">
+			<Parameters table="UMPInOut" external_configuration="UmpCommunicator" external_recipient="OutgoingMessagePublisherRecipient"/>
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+		
+		<MProcessor name="DeliveryOutMsgWriter" file="components\DeliveryOutMsgWriter.dll" class="ADB.DeliveryOutMsgWriter">
+			<MReceivers>
+				<MReceiver name="Writer"/>
+			</MReceivers>
+		</MProcessor>
+		
+
+		
+		
+		
+		
+	</MProcessors>
+</MComponents>
